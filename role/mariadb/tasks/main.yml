@@ -18,6 +18,8 @@
  # MariaDB Configuration
 - name: Sets the root password
   mysql_user:
+    login_user: root
+    login_password: "{{ mysql_root_password }}"
     name: root
     password: "{{ mysql_root_password }}"
     login_unix_socket: /var/run/mysqld/mysqld.sock
