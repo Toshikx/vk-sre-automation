@@ -1,0 +1,27 @@
+---
+- name: Install Python
+  hosts: lampstack
+  become: true
+  become_method: sudo
+  pre_tasks:
+    - name: Refresh apt cache
+      become: no
+      local_action: shell ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -o ConnectTimeout=5 {{ inventory_hostname }} sudo apt-get update     
+    - name: Install Python-apt to pull in Python
+      become: no
+      local_action: shell ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -o ConnectTimeout=5 {{ inventory_hostname }} sudo apt-get install --no-install-recommends --assume-yes python-apt
+  tasks:
+  - name: Install Python
+    apt:
+      name: python
+      state: present
+
+- name: configure lamp
+  hosts: lampstack
+  become: yes
+  become_method: sudo
+  vars_files:
+    - vars/default.yml
+  roles:
+    - apache
+    - mariadb
